@@ -1,6 +1,6 @@
 # Skillwheel for Heroes of Might & Magic V
 
-<img height=300 src='github/screenshot.png'>
+<img height=640 src='github/screenshot.png'>
 
 This is a wrapper for the original app, making it available online with mobile devices support
 

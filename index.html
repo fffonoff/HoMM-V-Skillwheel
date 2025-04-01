@@ -3,43 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skillwheel 3.0</title>
+    <title>HoMM V Skillwheel</title>
     <link rel="icon" href="favicon.ico">
+    <link rel="preload" as="image" href="assets/toggle_bg.svg">
+    <link rel="preload" as="image" href="assets/toggle_bg_active.svg">
     <style>
-        html, body {
-            height: 100%;
+        @import url("https://fonts.cdnfonts.com/css/lucida-unicode-calligraphy");
+
+        * {
             margin: 0;
             padding: 0;
-            overflow-y: auto;
+            overflow-y: hidden;
+            user-select: none;
+            -webkit-user-select: none;
         }
-        #container {
+
+        html,
+        body {
             height: 100%;
+            background-color: #fff;
+        }
+
+        .v-stack {
             display: flex;
+            flex-direction: column;
+        }
+
+        .full-height {
+            height: 100%;
+        }
+
+        .version-selector {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+        }
+
+        .version-selector > input {
+            width: 0;
+            position: fixed;
+            opacity: 0;
+        }
+
+        .version-selector > label {
+            display: flex;
+            width: 48px;
+            height: 48px;
+            justify-content: center;
+            align-items: center;
+            background-image: url(assets/toggle_bg.svg);
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border: 0;
+            border-radius: 8px;
+            box-shadow: 1px 1px 6px black;
+            color: #ffcd29;
+            font: italic 12pt "Lucida Unicode Calligraphy", sans-serif;
+            cursor: pointer;
+        }
+
+        .version-selector > label:hover,
+        .version-selector > input[type="radio"]:checked + label {
+            background-image: url(assets/toggle_bg_active.svg);
+        }
+
+        #player-container {
+            align-self: stretch;    
+        }
+
+        [hidden] {
+            display: none;
+        }
+
+        @media (max-width: 960px) {
+            .version-selector {
+                position: static;
+                flex-direction: row;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="container"></div>
+    <main class="v-stack full-height">
+        <div id="player-container" class="full-height"></div>
+        <nav class="v-stack version-selector" hidden>
+            <input type="radio" id="version_2" name="version" value="2">
+            <label title="For the original game and the Hammers of Fate expansion" for="version_2">
+                <sub>v</sub>2.1
+            </label>
+            <input type="radio" id="version_3" name="version" value="3">
+            <label title="For the Tribes of the East expansion" for="version_3">
+                <sub>v</sub>3.0
+            </label>
+        </nav>
+    </main>
+
     <script>
+        const VERSIONS = {
+            2: "/skillwheel_2_1.swf",
+            3: "/skillwheel_3_0.swf",
+        };
+
         window.RufflePlayer = window.RufflePlayer || {};
         window.addEventListener("load", (event) => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
-            const container = document.getElementById("container");
+            const container = document.getElementById("player-container");
             container.appendChild(player);
             player.config = {
                 autoplay: "on",
                 unmuteOverlay: "hidden",
-                quality: "best"
-            }
+                quality: "best",
+            };
             player.style.width = "100%";
             player.style.height = "100%";
-            player.style.touchAction = "auto";
-            player.ruffle().load("skillwheel.swf").then(() => {
-                const canvas = player.shadowRoot.querySelector("#container").querySelector("canvas");
-                canvas.style.touchAction = "auto";
-            })
+            player.style.touchAction = "auto"; // to enable zooming on touch devices
+
+            const selection = localStorage.getItem("selectedVersion") || "2";
+            const selectorToggles = document.querySelectorAll(".version-selector > input");
+            selectorToggles.forEach((element) => {
+                if (element.value == selection) {
+                    element.checked = true;
+                }
+
+                element.addEventListener("change", (event) => {
+                    load(player, event.target.value);
+                });
+            });
+
+            load(player, selection);
         });
+
+        function load(player, version) {
+            if (!player) return;
+
+            const selectedVersionPath = VERSIONS[version];
+            if (!selectedVersionPath) return;
+
+            player.ruffle().load(selectedVersionPath).then(() => {
+                const canvas = player.shadowRoot.querySelector("#container canvas");
+                canvas.style.touchAction = "auto"; // to enable zooming on touch devices
+
+                const versionSelector = document.querySelector(".version-selector");
+                versionSelector.hidden = false;
+
+                localStorage.setItem("selectedVersion", version);
+            });
+        }
     </script>
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </body>

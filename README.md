@@ -1,6 +1,6 @@
 # Skillwheel for Heroes of Might & Magic V
 
-<img height=440 src='github/screenshot_2_1.png'> <img height=440 src='github/screenshot_3_0.png'>
+<img height=400 src='github/screenshot_2_1.png'> <img height=400 src='github/screenshot_3_0.png'>
 
 This is a wrapper for Skillwheel v2.1 and v3.0. 
 - Version 2.1 supports the original game, as well as the Hammers of Fate expansion

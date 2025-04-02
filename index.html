@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,13 +42,13 @@
             padding: 12px;
         }
 
-        .version-selector>input {
+        .version-selector > input {
             width: 0;
             position: fixed;
             opacity: 0;
         }
 
-        .version-selector>label {
+        .version-selector > label {
             display: flex;
             width: 48px;
             height: 48px;
@@ -67,8 +66,8 @@
             cursor: pointer;
         }
 
-        .version-selector>label:hover,
-        .version-selector>input[type="radio"]:checked+label {
+        .version-selector > label:hover,
+        .version-selector > input[type="radio"]:checked + label {
             background-image: url(assets/toggle_bg_active.svg);
         }
 
@@ -88,7 +87,6 @@
         }
     </style>
 </head>
-
 <body>
     <main class="v-stack full-height">
         <div id="player-container" class="full-height"></div>
@@ -106,8 +104,8 @@
 
     <script>
         const VERSIONS = {
-            2: "/skillwheel_2_1.swf",
-            3: "/skillwheel_3_0.swf",
+            2: "skillwheel_2_1.swf",
+            3: "skillwheel_3_0.swf",
         };
 
         window.RufflePlayer = window.RufflePlayer || {};
@@ -159,5 +157,4 @@
     </script>
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </body>
-
 </html>
